@@ -11,6 +11,8 @@ function Home() {
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
   const { user } = useAuth();
 
   const searchPlaceholders = [
@@ -20,19 +22,63 @@ function Home() {
     "Something sweet and crispy..."
   ];
 
+  // Debounce the search query
   useEffect(() => {
-    foodItemService.getAllItems().then(data => {
-      setItems(data);
-      setLoading(false);
-    });
+    const handler = setTimeout(() => {
+      setDebouncedQuery(searchQuery);
+    }, 600);
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
 
-    // Rotate the search placeholder every 3 seconds
+  // Fetch items based on AI search or fetch all
+  useEffect(() => {
+    let ignore = false;
+    setLoading(true);
+    
+    if (debouncedQuery.trim()) {
+      setSelectedCategory("All"); // Reset category filter when searching
+      foodItemService.searchItems(debouncedQuery)
+        .then(data => {
+          if (!ignore) {
+            setItems(data);
+            setLoading(false);
+          }
+        })
+        .catch(err => {
+          if (!ignore) {
+            console.error("AI Search Error:", err);
+            setLoading(false);
+          }
+        });
+    } else {
+      foodItemService.getAllItems()
+        .then(data => {
+          if (!ignore) {
+            setItems(data);
+            setLoading(false);
+          }
+        })
+        .catch(err => {
+          if (!ignore) {
+            console.error("Fetch Error:", err);
+            setLoading(false);
+          }
+        });
+    }
+
+    return () => {
+      ignore = true;
+    };
+  }, [debouncedQuery]);
+
+  // Rotate the search placeholder every 5 seconds
+  useEffect(() => {
     const intervalId = setInterval(() => {
       setPlaceholderIndex(prev => (prev + 1) % searchPlaceholders.length);
     }, 5000);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [searchPlaceholders.length]);
 
   // Dynamically extract all unique categories from the database items!
   const categories = ["All", ...new Set(items.map(item => item.category))];
@@ -74,26 +120,30 @@ function Home() {
               placeholder={searchPlaceholders[placeholderIndex]}
               style={{ padding: '1rem 2rem 1rem 3.5rem', fontSize: '1.05rem', boxShadow: 'inset 0 0 0 1px rgba(0,0,0,0.05)', transition: 'all 0.3s ease' }}
               disabled={!user}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
         </div>
       </div>
 
       {/* Dynamic Category Filtering Buttons */}
-      <div className="d-flex justify-content-center gap-2 mb-5 flex-wrap">
-        {categories.map(category => (
-          <Button
-            key={category}
-            onClick={() => setSelectedCategory(category)}
-            variant={selectedCategory === category ? 'primary' : 'secondary'}
-            className="rounded-pill px-4"
-            disabled={!user}
-            style={!user ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
-          >
-            {category}
-          </Button>
-        ))}
-      </div>
+      {(!searchQuery && !debouncedQuery) && (
+        <div className="d-flex justify-content-center gap-2 mb-5 flex-wrap">
+          {categories.map(category => (
+            <Button
+              key={category}
+              onClick={() => setSelectedCategory(category)}
+              variant={selectedCategory === category ? 'primary' : 'secondary'}
+              className="rounded-pill px-4"
+              disabled={!user}
+              style={!user ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
+            >
+              {category}
+            </Button>
+          ))}
+        </div>
+      )}
 
       {/* Grid System for the items with Overlay for unauthenticated users */}
       <div className="position-relative pb-5">

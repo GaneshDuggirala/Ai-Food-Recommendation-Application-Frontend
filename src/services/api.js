@@ -35,6 +35,12 @@ export const foodItemService = {
     return response.data;
   },
   
+  // GET items via AI Search
+  searchItems: async (query) => {
+    const response = await api.get(`/items/search?q=${encodeURIComponent(query)}`);
+    return response.data;
+  },
+  
   // POST new item
   addItem: async (itemData) => {
     const response = await api.post('/items/add', itemData);
