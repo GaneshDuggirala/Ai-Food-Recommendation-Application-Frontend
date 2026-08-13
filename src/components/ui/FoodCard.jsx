@@ -33,7 +33,7 @@ export function FoodCard({ item }) {
           {item.availability !== false ? (
             
             cartItem ? (
-              // ULTRA PREMIUM QUANTITY STEPPER
+              // QUANTITY STEPPER
               <div 
                 className="d-flex align-items-center justify-content-between rounded-pill shadow-sm" 
                 style={{ 

@@ -1,12 +1,21 @@
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import { Button } from './ui/Button';
+import { useNavigate } from 'react-router-dom';
 
 export default function CartModal({ isOpen, onClose }) {
   const { cart, updateQuantity, removeFromCart, totalPrice, clearCart } = useCart();
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   if (!isOpen) return null;
 
   const handleCheckout = () => {
+    if (!user) {
+      onClose();
+      navigate('/login');
+      return;
+    }
     alert("Checkout functionality coming in Phase 2 with Backend Orders!");
   };
 
@@ -49,7 +58,7 @@ export default function CartModal({ isOpen, onClose }) {
                     <span className="text-success fw-bold">${(item.price * item.quantity).toFixed(2)}</span>
                   </div>
 
-                  {/* Premium Quantity Controls */}
+                  {/* Quantity Controls */}
                   <div 
                     className="d-flex align-items-center rounded-pill" 
                     style={{ backgroundColor: '#f4f4f5', padding: '4px' }}
