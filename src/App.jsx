@@ -4,6 +4,7 @@ import Footer from './components/Footer';
 import Home from './pages/user/Home';
 import About from './pages/user/About';
 import Chefs from './pages/user/Chefs';
+import MyOrders from './pages/user/MyOrders';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import OrderManagement from './pages/admin/OrderManagement';
 import Login from './pages/Login';
@@ -47,6 +48,15 @@ function App() {
 
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            
+            <Route 
+              path="/my-orders" 
+              element={
+                <ProtectedRoute>
+                  <MyOrders />
+                </ProtectedRoute>
+              } 
+            />
 
             {/* Admin Route */}
             <Route

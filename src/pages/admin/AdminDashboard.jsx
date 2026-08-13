@@ -119,7 +119,7 @@ function AdminDashboard() {
 
       {/* Header section with title and button side-by-side */}
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2 className="fw-bold m-0" style={{ letterSpacing: '-0.025em' }}>Admin Dashboard</h2>
+        <h2 className="fw-bold m-0" style={{ letterSpacing: '-0.025em' }}>Item Management</h2>
         <Button variant="primary" onClick={handleAddNew}>+ Add New Item</Button>
       </div>
 

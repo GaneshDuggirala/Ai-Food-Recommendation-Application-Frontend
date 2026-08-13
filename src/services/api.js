@@ -60,4 +60,30 @@ export const foodItemService = {
   }
 };
 
+export const orderService = {
+  // GET all orders (admin)
+  getAllOrders: async () => {
+    const response = await api.get('/orders/all');
+    return response.data;
+  },
+  
+  // GET user's orders
+  getUserOrders: async () => {
+    const response = await api.get('/orders/user');
+    return response.data;
+  },
+  
+  // POST create order
+  addOrder: async (orderData) => {
+    const response = await api.post('/orders/add', orderData);
+    return response.data;
+  },
+
+  // PUT update order status
+  updateOrderStatus: async (orderId, status) => {
+    const response = await api.put(`/orders/${orderId}/status`, { status });
+    return response.data;
+  }
+};
+
 export default api;

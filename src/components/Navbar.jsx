@@ -60,7 +60,7 @@ function Navbar() {
               {isAdmin && (
                 <>
                   <li className="nav-item">
-                    <Link className="nav-link fw-medium" to="/admin" onClick={() => setIsMobileMenuOpen(false)}>Admin Dashboard</Link>
+                    <Link className="nav-link fw-medium" to="/admin" onClick={() => setIsMobileMenuOpen(false)}>Item Management</Link>
                   </li>
                   <li className="nav-item">
                     <Link className="nav-link fw-medium" to="/admin/orders" onClick={() => setIsMobileMenuOpen(false)}>Order Management</Link>
@@ -102,6 +102,13 @@ function Navbar() {
                         <span className="material-symbols-outlined text-primary fs-5">shopping_cart</span>
                         Your Cart
                         {totalItems > 0 && <span className="badge bg-primary rounded-pill ms-auto">{totalItems}</span>}
+                      </button>
+                      <button 
+                        className="dropdown-item d-flex align-items-center gap-3 py-2 fw-medium" 
+                        onClick={() => { navigate('/my-orders'); setIsProfileOpen(false); setIsMobileMenuOpen(false); }}
+                      >
+                        <span className="material-symbols-outlined text-primary fs-5">receipt_long</span>
+                        Your Orders
                       </button>
                       <div className="dropdown-divider my-1"></div>
                       <button 
