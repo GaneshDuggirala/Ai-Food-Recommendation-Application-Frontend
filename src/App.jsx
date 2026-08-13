@@ -5,6 +5,7 @@ import Home from './pages/user/Home';
 import About from './pages/user/About';
 import Chefs from './pages/user/Chefs';
 import AdminDashboard from './pages/admin/AdminDashboard';
+import OrderManagement from './pages/admin/OrderManagement';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import { useAuth } from './context/AuthContext';
@@ -53,6 +54,14 @@ function App() {
               element={
                 <ProtectedRoute adminOnly={true}>
                   <AdminDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/orders"
+              element={
+                <ProtectedRoute adminOnly={true}>
+                  <OrderManagement />
                 </ProtectedRoute>
               }
             />

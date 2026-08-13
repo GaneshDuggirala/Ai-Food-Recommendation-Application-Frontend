@@ -1,17 +1,37 @@
 import { useEffect, useState } from 'react';
 import { foodItemService } from '../../services/api';
 import { FoodCard } from '../../components/ui/FoodCard';
+import { CardSkeleton } from '../../components/ui/Skeleton';
 import { Button } from '../../components/ui/Button';
 import { useAuth } from '../../context/AuthContext';
 import { Link } from 'react-router-dom';
 
 function Home() {
   const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [placeholderIndex, setPlaceholderIndex] = useState(0);
   const { user } = useAuth();
 
+  const searchPlaceholders = [
+    "I want something spicy...",
+    "Craving a light salad today...",
+    "Show me the best desserts...",
+    "Something sweet and crispy..."
+  ];
+
   useEffect(() => {
-    foodItemService.getAllItems().then(data => setItems(data));
+    foodItemService.getAllItems().then(data => {
+      setItems(data);
+      setLoading(false);
+    });
+
+    // Rotate the search placeholder every 3 seconds
+    const intervalId = setInterval(() => {
+      setPlaceholderIndex(prev => (prev + 1) % searchPlaceholders.length);
+    }, 5000);
+
+    return () => clearInterval(intervalId);
   }, []);
 
   // Dynamically extract all unique categories from the database items!
@@ -38,6 +58,27 @@ function Home() {
         </p>
       </div>
 
+      {/*Search Bar  */}
+      <div className="row justify-content-center mb-4">
+        <div className="col-12 col-md-8 col-lg-6">
+          <div className="position-relative shadow-sm rounded-pill" style={{ opacity: !user ? 0.6 : 1 }}>
+            <span
+              className="material-symbols-outlined position-absolute top-50 translate-middle-y text-primary ms-4"
+              style={{ fontSize: '24px', pointerEvents: 'none' }}
+            >
+              auto_awesome
+            </span>
+            <input
+              type="text"
+              className="form-control form-control-lg bg-white border-0 rounded-pill transition"
+              placeholder={searchPlaceholders[placeholderIndex]}
+              style={{ padding: '1rem 2rem 1rem 3.5rem', fontSize: '1.05rem', boxShadow: 'inset 0 0 0 1px rgba(0,0,0,0.05)', transition: 'all 0.3s ease' }}
+              disabled={!user}
+            />
+          </div>
+        </div>
+      </div>
+
       {/* Dynamic Category Filtering Buttons */}
       <div className="d-flex justify-content-center gap-2 mb-5 flex-wrap">
         {categories.map(category => (
@@ -59,16 +100,26 @@ function Home() {
 
         <div
           className="row g-4"
-          style={!user ? { filter: 'blur(6px)', pointerEvents: 'none', userSelect: 'none', opacity: 0.7 } : {}}
+          style={!user && !loading ? { filter: 'blur(6px)', pointerEvents: 'none', userSelect: 'none', opacity: 0.7 } : {}}
         >
-          {displayItems.map(item => (
-            <div key={item.id} className="col-12 col-md-6 col-lg-4">
-              <FoodCard item={item} />
-            </div>
-          ))}
+          {loading ? (
+            /* Skeleton Loading State */
+            [...Array(6)].map((_, i) => (
+              <div key={i} className="col-12 col-md-6 col-lg-4">
+                <CardSkeleton />
+              </div>
+            ))
+          ) : (
+            /* Actual Food Cards */
+            displayItems.map(item => (
+              <div key={item.id} className="col-12 col-md-6 col-lg-4">
+                <FoodCard item={item} />
+              </div>
+            ))
+          )}
 
           {/* Empty state just in case */}
-          {displayItems.length === 0 && (
+          {!loading && displayItems.length === 0 && (
             <div className="col-12 text-center py-5">
               <p className="text-muted fs-5">No items found in this category.</p>
             </div>
@@ -76,7 +127,7 @@ function Home() {
         </div>
 
         {/* Login Overlay - Only shows if user is NOT logged in */}
-        {!user && (
+        {!loading && !user && (
           <div
             className="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center"
             style={{ zIndex: 10, marginTop: displayItems.length > 0 ? '4rem' : '0' }}

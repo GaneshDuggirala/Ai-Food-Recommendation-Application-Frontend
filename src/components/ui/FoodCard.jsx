@@ -96,7 +96,9 @@ export function FoodCard({ item }) {
             )
             
           ) : (
-             <span className="text-danger fw-bold" style={{fontSize: '0.875rem'}}>Sold Out</span>
+             <Button variant="secondary" disabled style={{ opacity: 0.6, cursor: 'not-allowed', padding: '0.375rem 0.75rem', fontSize: '0.875rem' }}>
+               Currently Unavailable
+             </Button>
           )}
         </div>
       </div>

@@ -58,9 +58,14 @@ function Navbar() {
 
 
               {isAdmin && (
-                <li className="nav-item">
-                  <Link className="nav-link fw-medium" to="/admin" onClick={() => setIsMobileMenuOpen(false)}>Admin Dashboard</Link>
-                </li>
+                <>
+                  <li className="nav-item">
+                    <Link className="nav-link fw-medium" to="/admin" onClick={() => setIsMobileMenuOpen(false)}>Admin Dashboard</Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link className="nav-link fw-medium" to="/admin/orders" onClick={() => setIsMobileMenuOpen(false)}>Order Management</Link>
+                  </li>
+                </>
               )}
 
               {!user ? (
