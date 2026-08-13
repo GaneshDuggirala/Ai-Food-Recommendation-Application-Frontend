@@ -1,0 +1,127 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0');
+
+:root {
+  /* Shadcn-like CSS Overrides for Bootstrap */
+  --bs-font-sans-serif: 'Geist', system-ui, -apple-system, sans-serif;
+  
+  /* Zinc Color Palette */
+  --bs-primary: #18181b; 
+  --bs-primary-rgb: 24, 24, 27;
+  --bs-body-bg: #fafafa; 
+  --bs-body-color: #09090b; 
+  --bs-border-color: #e4e4e7; 
+  
+  /* Smooth Border Radiuses */
+  --bs-border-radius: 0.5rem;
+  --bs-border-radius-sm: 0.375rem;
+  --bs-border-radius-lg: 0.75rem;
+}
+
+body {
+  font-family: var(--bs-font-sans-serif);
+  background-color: var(--bs-body-bg);
+  color: var(--bs-body-color);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* =========================================
+   SHADCN-STYLE COMPONENT OVERRIDES
+========================================= */
+
+/* 1. BUTTONS (Sleek, black, rounded, subtle shadow) */
+.btn {
+  font-weight: 500 !important;
+  font-size: 0.875rem !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: var(--bs-border-radius-sm) !important;
+  transition: all 0.2s !important;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+}
+.btn-primary {
+  background-color: var(--bs-primary) !important;
+  border-color: var(--bs-primary) !important;
+  color: #fff !important;
+}
+.btn-primary:hover {
+  background-color: #27272a !important; /* Lighter Zinc on hover */
+  border-color: #27272a !important;
+}
+.btn-secondary {
+  background-color: #ffffff !important;
+  color: #18181b !important;
+  border: 1px solid #e4e4e7 !important;
+}
+.btn-secondary:hover {
+  background-color: #f4f4f5 !important;
+}
+.btn-danger {
+  background-color: #ef4444 !important;
+  border-color: #ef4444 !important;
+}
+
+/* 2. CARDS (White, faint 1px border, floating shadow) */
+.card {
+  border: 1px solid var(--bs-border-color) !important;
+  border-radius: var(--bs-border-radius-lg) !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1) !important;
+  background-color: #ffffff !important;
+  overflow: hidden !important;
+  transition: box-shadow 0.2s, transform 0.2s !important;
+}
+.card:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1) !important;
+}
+.card-title {
+  font-weight: 600 !important;
+  font-size: 1.125rem !important;
+  letter-spacing: -0.025em !important;
+}
+
+/* 3. BADGES (Pill shaped, light gray background, dark text) */
+.badge {
+  font-weight: 500 !important;
+  font-size: 0.75rem !important;
+  padding: 0.25rem 0.625rem !important;
+  border-radius: 9999px !important; 
+}
+.bg-secondary {
+  background-color: #f4f4f5 !important;
+  color: #18181b !important;
+  border: 1px solid #e4e4e7 !important;
+}
+
+/* 4. NAVBAR (Glassmorphism white blur) */
+.navbar {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  backdrop-filter: blur(12px) !important;
+  border-bottom: 1px solid var(--bs-border-color) !important;
+}
+.navbar-brand {
+  color: #09090b !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.025em !important;
+}
+.nav-link {
+  color: #71717a !important;
+  font-weight: 500 !important;
+  font-size: 0.875rem !important;
+}
+.nav-link:hover {
+  color: #09090b !important;
+}
+
+/* 5. ADMIN TABLES */
+.table {
+  font-size: 0.875rem !important;
+}
+.table thead th {
+  background-color: #f4f4f5 !important;
+  color: #71717a !important;
+  font-weight: 500 !important;
+  border-bottom: 1px solid var(--bs-border-color) !important;
+}
+.table tbody td {
+  border-bottom: 1px solid var(--bs-border-color) !important;
+  vertical-align: middle !important;
+}
