@@ -1,13 +1,25 @@
 import { Badge } from './Badge';
 import { Button } from './Button';
 import { useCart } from '../../context/CartContext';
-
+import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 export function FoodCard({ item }) {
   // Grab the full cart and update tools from our global context
   const { cart, addToCart, updateQuantity } = useCart();
   
   // Check if this specific item is currently in the cart
   const cartItem = cart.find(i => i.id === item.id);
+
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleAddToCart = () => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+    addToCart(item);
+  };
 
   return (
     <div className="card h-100">
@@ -92,7 +104,7 @@ export function FoodCard({ item }) {
               </div>
             ) : (
               // Default Add to Cart button
-              <Button variant="primary" onClick={() => addToCart(item)}>Add to Cart</Button>
+              <Button variant="primary" onClick={handleAddToCart}>Add to Cart</Button>
             )
             
           ) : (

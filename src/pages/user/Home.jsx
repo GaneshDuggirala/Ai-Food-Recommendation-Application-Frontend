@@ -88,8 +88,8 @@ function Home() {
     ? items
     : items.filter(item => item.category === selectedCategory);
 
-  // If the user isn't logged in, only give them a sneak peek of the first 3 items!
-  const displayItems = user ? filteredItems : filteredItems.slice(0, 3);
+  // Show all items regardless of authentication
+  const displayItems = filteredItems;
 
   return (
     <div className="container py-5">
@@ -107,7 +107,7 @@ function Home() {
       {/*Search Bar  */}
       <div className="row justify-content-center mb-4">
         <div className="col-12 col-md-8 col-lg-6">
-          <div className="position-relative shadow-sm rounded-pill" style={{ opacity: !user ? 0.6 : 1 }}>
+          <div className="position-relative shadow-sm rounded-pill">
             <span
               className="material-symbols-outlined position-absolute top-50 translate-middle-y text-primary ms-4"
               style={{ fontSize: '24px', pointerEvents: 'none' }}
@@ -119,7 +119,6 @@ function Home() {
               className="form-control form-control-lg bg-white border-0 rounded-pill transition"
               placeholder={searchPlaceholders[placeholderIndex]}
               style={{ padding: '1rem 2rem 1rem 3.5rem', fontSize: '1.05rem', boxShadow: 'inset 0 0 0 1px rgba(0,0,0,0.05)', transition: 'all 0.3s ease' }}
-              disabled={!user}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -136,8 +135,6 @@ function Home() {
               onClick={() => setSelectedCategory(category)}
               variant={selectedCategory === category ? 'primary' : 'secondary'}
               className="rounded-pill px-4"
-              disabled={!user}
-              style={!user ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
             >
               {category}
             </Button>
@@ -145,13 +142,9 @@ function Home() {
         </div>
       )}
 
-      {/* Grid System for the items with Overlay for unauthenticated users */}
       <div className="position-relative pb-5">
 
-        <div
-          className="row g-4"
-          style={!user && !loading ? { filter: 'blur(6px)', pointerEvents: 'none', userSelect: 'none', opacity: 0.7 } : {}}
-        >
+        <div className="row g-4">
           {loading ? (
             /* Skeleton Loading State */
             [...Array(6)].map((_, i) => (
@@ -176,30 +169,6 @@ function Home() {
           )}
         </div>
 
-        {/* Login Overlay - Only shows if user is NOT logged in */}
-        {!loading && !user && (
-          <div
-            className="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center"
-            style={{ zIndex: 10, marginTop: displayItems.length > 0 ? '4rem' : '0' }}
-          >
-            <div className="bg-white p-5 rounded-4 shadow-lg text-center" style={{ maxWidth: '420px', border: '1px solid rgba(0,0,0,0.08)' }}>
-              <div className="d-flex justify-content-center mb-3">
-                <div className="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style={{ width: '80px', height: '80px' }}>
-                  <span className="material-symbols-outlined text-primary" style={{ fontSize: '40px' }}>lock</span>
-                </div>
-              </div>
-              <h3 className="fw-bold mb-3" style={{ letterSpacing: '-0.025em' }}>Members Only</h3>
-              <p className="text-muted mb-4 fs-6">
-                Please log in to view our full menu, check prices, and place your order.
-              </p>
-              <Link to="/login" style={{ textDecoration: 'none' }}>
-                <Button variant="primary" className="w-100 py-3 fw-bold fs-6 shadow-sm">
-                  Sign In to View Menu
-                </Button>
-              </Link>
-            </div>
-          </div>
-        )}
 
       </div>
 
