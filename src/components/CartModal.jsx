@@ -24,15 +24,13 @@ export default function CartModal({ isOpen, onClose }) {
 
     setIsCheckingOut(true);
     try {
-      // The backend OrderSchema takes one item per order, so we submit each cart item as a distinct order line
-      await Promise.all(cart.map(item => {
-        return orderService.addOrder({
-          item_id: item.id,
-          quantity: item.quantity,
-          price: item.price,
-          total_amount: item.price * item.quantity
-        });
-      }));
+      // Submit all cart items as a single order
+      await orderService.addOrder({
+        item_id: cart.map(item => item.id),
+        quantity: cart.map(item => item.quantity),
+        price: cart.map(item => item.price),
+        total_amount: totalPrice
+      });
 
       clearCart();
       setOrderPlacedSuccess(true);

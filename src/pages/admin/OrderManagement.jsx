@@ -55,8 +55,16 @@ export default function OrderManagement() {
   // 3. Popular Items
   const itemCounts = {};
   orders.forEach(o => {
-    if (!itemCounts[o.item_id]) itemCounts[o.item_id] = 0;
-    itemCounts[o.item_id] += (o.quantity || 1);
+    if (o.item_id && Array.isArray(o.item_id)) {
+      o.item_id.forEach((id, index) => {
+        if (!itemCounts[id]) itemCounts[id] = 0;
+        const qty = o.quantity && o.quantity[index] ? o.quantity[index] : 1;
+        itemCounts[id] += qty;
+      });
+    } else {
+      if (!itemCounts[o.item_id]) itemCounts[o.item_id] = 0;
+      itemCounts[o.item_id] += (o.quantity || 1);
+    }
   });
   
   const popularItemIds = Object.entries(itemCounts)
@@ -73,7 +81,17 @@ export default function OrderManagement() {
   const columns = [
     { header: 'Order ID', key: 'order_id', render: (row) => <span className="fw-bold">{row.order_id}</span> },
     { header: 'Customer ID', key: 'user_id' },
-    { header: 'Item', key: 'item_id', render: (row) => <span>{getFoodName(row.item_id)} (x{row.quantity})</span> },
+    { header: 'Item', key: 'item_id', render: (row) => (
+      <div className="d-flex flex-column gap-1">
+        {row.item_id && Array.isArray(row.item_id) ? (
+          row.item_id.map((id, index) => (
+            <span key={index}>{getFoodName(id)} (x{row.quantity && row.quantity[index] ? row.quantity[index] : 1})</span>
+          ))
+        ) : (
+          <span>{getFoodName(row.item_id)} (x{row.quantity})</span>
+        )}
+      </div>
+    ) },
     { header: 'Date', key: 'created_at', render: (row) => row.created_at ? new Date(row.created_at).toLocaleString() : 'N/A' },
     { header: 'Total', key: 'total_amount', render: (row) => <span className="fw-medium text-success">${(row.total_amount || 0).toFixed(2)}</span> },
     { 

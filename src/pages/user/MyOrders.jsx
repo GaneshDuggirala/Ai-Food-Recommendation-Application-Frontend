@@ -76,24 +76,63 @@ export default function MyOrders() {
                         {getStatusBadge(order.status)}
                       </div>
                     </div>
-                    
-                    <div className="d-flex gap-3 align-items-center">
-                      {item ? (
-                        <img 
-                          src={item.image_url} 
-                          alt={item.name} 
-                          className="rounded-3" 
-                          style={{ width: '80px', height: '80px', objectFit: 'cover' }} 
-                        />
-                      ) : (
-                        <div className="bg-light rounded-3 d-flex align-items-center justify-content-center text-muted" style={{ width: '80px', height: '80px' }}>
-                          <span className="material-symbols-outlined">restaurant</span>
+                    <div className="d-flex flex-column gap-3 mt-2">
+                      {order.item_id && Array.isArray(order.item_id) ? order.item_id.map((id, index) => {
+                        const item = getFoodItem(id);
+                        const qty = order.quantity && order.quantity[index] ? order.quantity[index] : 1;
+                        return (
+                          <div key={index} className="d-flex gap-3 align-items-center">
+                            {item ? (
+                              <img 
+                                src={item.image_url} 
+                                alt={item.name} 
+                                className="rounded-3" 
+                                style={{ width: '64px', height: '64px', objectFit: 'cover' }} 
+                              />
+                            ) : (
+                              <div className="bg-light rounded-3 d-flex align-items-center justify-content-center text-muted" style={{ width: '64px', height: '64px' }}>
+                                <span className="material-symbols-outlined">restaurant</span>
+                              </div>
+                            )}
+                            
+                            <div className="flex-grow-1">
+                              <h6 className="fw-bold mb-1">{item ? item.name : `Item #${id}`}</h6>
+                              <p className="text-muted mb-0 small fw-medium">Qty: {qty}</p>
+                            </div>
+                          </div>
+                        );
+                      }) : (
+                        // Fallback for older orders where item_id was a single number
+                        <div className="d-flex gap-3 align-items-center">
+                          {(() => {
+                            const item = getFoodItem(order.item_id);
+                            return (
+                              <>
+                                {item ? (
+                                  <img 
+                                    src={item.image_url} 
+                                    alt={item.name} 
+                                    className="rounded-3" 
+                                    style={{ width: '64px', height: '64px', objectFit: 'cover' }} 
+                                  />
+                                ) : (
+                                  <div className="bg-light rounded-3 d-flex align-items-center justify-content-center text-muted" style={{ width: '64px', height: '64px' }}>
+                                    <span className="material-symbols-outlined">restaurant</span>
+                                  </div>
+                                )}
+                                
+                                <div className="flex-grow-1">
+                                  <h6 className="fw-bold mb-1">{item ? item.name : `Item #${order.item_id}`}</h6>
+                                  <p className="text-muted mb-0 small fw-medium">Qty: {order.quantity}</p>
+                                </div>
+                              </>
+                            );
+                          })()}
                         </div>
                       )}
                       
-                      <div className="flex-grow-1">
-                        <h5 className="fw-bold mb-1">{item ? item.name : `Item #${order.item_id}`}</h5>
-                        <p className="text-muted mb-1 small fw-medium">Qty: {order.quantity}</p>
+                      <div className="d-flex justify-content-between align-items-center border-top pt-3 mt-1">
+                        <span className="fw-medium text-muted">Total Amount</span>
                         <h6 className="fw-bold text-success m-0">${(order.total_amount || 0).toFixed(2)}</h6>
                       </div>
                     </div>
