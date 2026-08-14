@@ -30,6 +30,3 @@
 4. Start the React app:
    `npm run dev`
    (The frontend will be available at http://localhost:5173)
-
-## Assumptions Made
-- Images: The Unsplash image links used for food items are public and will load normally on the frontend.
